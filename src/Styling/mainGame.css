@@ -1,0 +1,19 @@
+
+.randomedWordList{
+    background-color:rgb(35, 131, 6);
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 10%;
+    border-style: outset;
+    border-width: 7px;
+    border-color: rgb(194, 185, 185);
+    width: 100px;
+    letter-spacing: 20;
+}
+
+.wordItem:hover{
+    background-color: black;
+    color: white;
+    width: 70%;
+    padding-left: 2px;
+}
