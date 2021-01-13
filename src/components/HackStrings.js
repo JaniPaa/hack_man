@@ -111,7 +111,9 @@ const HackStrings = (props) => {
         setLikeness(rightLetterAmount)
 
         if (rightLetterAmount === rightWordChars.length) {
-            setMessage("You have hacked the system!")
+            // setMessage("You have hacked the system!")
+            alert("You have hacked the system!")
+            setPlay(false)
         } else {
             setMessage("Wrong word!")
             setLives(lives - 1)
@@ -190,7 +192,11 @@ const HackStrings = (props) => {
     } if (lives === 0) {
         screen =
             <div>
-                <p>The system has been permanently locked.<br /> Try again next time.</p>
+                <p>The system has been permanently locked.</p>
+                <button onClick={e => {
+                    setPlay(false)
+                    setLives(3)
+                }}>Play again?</button>
             </div>
     }
 
