@@ -41,14 +41,14 @@ const HackStrings = (props) => {
         setWordAmount(e.target.value)
     }
 
-    function checkDuplicate(list) {
+    function getRandomWords(list) {
         var rand = Math.floor(Math.random() * Math.floor(list.length))
         if (!tempArray.includes(list[rand])) {
             tempArray.push(list[rand])
         } else {
             console.log(tempArray)
             console.log("Looping again because of: "+list[rand])
-            checkDuplicate(list)
+            getRandomWords(list)
         }
     }
 
@@ -60,22 +60,21 @@ const HackStrings = (props) => {
         if (wordLength === "6") {
             max = SixLetterWords.length
             for (var i = 0; i < wordAmount; i++) {
-                checkDuplicate(SixLetterWords)
+                getRandomWords(SixLetterWords)
             }
             setChosenWords(tempArray)
         }
         if (wordLength === "7") {
-            console.log("flag")
             max = SevenLetterWords.length
             for (var j = 0; j < wordAmount; j++) {
-                checkDuplicate(SevenLetterWords)
+                getRandomWords(SevenLetterWords)
             }
             setChosenWords(tempArray)
         }
         if (wordLength === "8") {
             max = EightLetterWords.length
             for (var k = 0; k < wordAmount; k++) {
-                checkDuplicate(EightLetterWords)
+                getRandomWords(EightLetterWords)
             }
             setChosenWords(tempArray)
         }
@@ -111,7 +110,6 @@ const HackStrings = (props) => {
         setLikeness(rightLetterAmount)
 
         if (rightLetterAmount === rightWordChars.length) {
-            // setMessage("You have hacked the system!")
             alert("You have hacked the system!")
             setPlay(false)
         } else {
@@ -121,6 +119,7 @@ const HackStrings = (props) => {
         rightLetterAmount = 0
     }
 
+    // Pretty primitive and clumsy way to change the screen, but it works so...
     let screen
     if (!play && difficulty === "Custom") {
         screen =
@@ -148,14 +147,12 @@ const HackStrings = (props) => {
                 <button onClick={e => {
                     setDifficulty("Easy")
                 }}>Back</button>
-                {/* <input type="submit" value="Set options" onClick={e => { alert("Options set") }} /><br /> */}
                 <button onClick={clicked}>Play</button>
             </div>
 
     } if (!play && difficulty !== "Custom") {
         screen =
             <div>
-                <h3>Welcome {props.users[0].usern}</h3>
                 <label>
                     Select difficulty:
                 <select value={difficulty} onChange={onDifficultyChange}>
@@ -202,6 +199,8 @@ const HackStrings = (props) => {
 
     return (
         <div>
+            <h3>Account: {props.users[0].username}</h3>
+            <button onClick={props.logout}>Logout</button>
             {screen}
         </div>
     )
