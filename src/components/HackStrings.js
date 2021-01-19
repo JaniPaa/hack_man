@@ -199,7 +199,7 @@ const HackStrings = (props) => {
 
     return (
         <div>
-            <h3>Account: {props.users[0].username}</h3>
+            <h3>Account: {props.user[0].username}</h3>
             <button onClick={props.logout}>Logout</button>
             {screen}
         </div>

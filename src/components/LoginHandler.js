@@ -6,29 +6,30 @@ const LoginHandler = () => {
 
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [user, setUser] = useState([])
-    const [usern, setUsername] = useState("")
-    const [password, setPassword] = useState("")
+    const [usernameRegister, setUsernameRegister] = useState("")
+    const [passwordRegister, setPasswordRegister] = useState("")
+    const [usernameLogin, setUsernameLogin] = useState("")
+    const [passwordLogin, setPasswordLogin] = useState("")
     const [storedUsers, setStoredUsers] = useState([])
 
-    var tempArray = []
 
     useEffect(() => {
         UserServices
-        .getAll()
-        .catch(error => {
-            console.log(error)
-        })
-        .then(response => {   
-            for(var i = 0; i < response.data.length; i++){
-                tempArray.push(response.data[i].username)
-            }
-            setStoredUsers(tempArray)
-        })
-    }, [])
+            .getAll()
+            .catch(error => {
+                console.log(error)
+            })
+            .then(response => {
+                //Scuffed way to get get/check users data.
+                setStoredUsers(response.data)
+            })
+    }, [storedUsers])
 
-    // async function checkDuplicateUsername() {
+    // function below is too slow :(
+
+    // function checkDuplicateUsername() {
     //     var tempUsername = ""
-    //     await UserServices.getOne(username).then(response => {
+    //     UserServices.getOne(username).then(response => {
     //         console.log(response.data.username + "wait?")
     //         tempUsername = response.data.username
     //     })
@@ -43,35 +44,42 @@ const LoginHandler = () => {
     //     }
     // }
 
-    const handleUserChange = (e) => {
+    const handleUsernameRegisterChange = (e) => {
         e.preventDefault()
-        setUsername(e.target.value)
+        setUsernameRegister(e.target.value)
     }
 
-    const handlePasswordChange = (e) => {
+    const handlePasswordRegisterChange = (e) => {
         e.preventDefault()
-        setPassword(e.target.value)
+        setPasswordRegister(e.target.value)
+    }
+
+    const handleUsernameLoginChange = (e) => {
+        e.preventDefault()
+        setUsernameLogin(e.target.value)
+    }
+
+    const handlePasswordLoginChange = (e) => {
+        e.preventDefault()
+        setPasswordLogin(e.target.value)
     }
 
     const handleRegister = (e) => {
         e.preventDefault()
-        console.log("attempted username: "+usern)
-        console.log(storedUsers)
-        if (usern === "" || password === "") {
+        if (usernameRegister === "" || passwordRegister === "") {
             alert("Please enter username and password")
-        } 
-        else if (storedUsers.includes(usern)) {
+        }
+        else if (storedUsers.some(user => user.username === usernameRegister)) {
             alert("Username already exists")
-        } 
+        }
         else {
-            console.log("We are here now1")
             const userObject = {
-                username: usern,
-                password: password
+                username: usernameRegister,
+                password: passwordRegister
             }
             setUser(user.concat(userObject))
-            setUsername('')
-            setPassword('')
+            setUsernameRegister('')
+            setPasswordRegister('')
             UserServices.create(userObject).then(response => {
                 console.log(response)
             })
@@ -79,16 +87,52 @@ const LoginHandler = () => {
         }
     }
 
+    const handleLogin = (e) => {
+        e.preventDefault()
+        const loginObject = {
+            username: usernameLogin,
+            password: passwordLogin
+        }
+        console.log(storedUsers)
+        console.log(usernameLogin)
+        if (usernameLogin === "" || passwordLogin === "") {
+            alert("Please enter username and password")
+        } else if (!storedUsers.some(user => user.username === usernameLogin)) {
+            alert("Wrong username")
+        } else if (storedUsers.some(user => user.username === usernameLogin)) {
+            var foundUser = storedUsers.find(user => {
+                return user.username === usernameLogin
+            })
+            if (foundUser.password !== passwordLogin) {
+                console.log(foundUser.password)
+                alert("Wrong password")
+            } else {
+                console.log(loginObject)
+                console.log("login success")
+                setUser(user.concat(loginObject))
+                setUsernameLogin('')
+                setPasswordLogin('')
+                setIsLoggedIn(true)
+            }
+        } else {return false}
+    }
+
     function logout() {
         setIsLoggedIn(false)
+        user.length = 0
     }
 
     if (isLoggedIn === false) {
         return (
             <div>
                 <form>
-                    <input type="text" value={usern} placeholder="username" onChange={handleUserChange}></input>
-                    <input type="password" placeholder="password" value={password} onChange={handlePasswordChange}></input>
+                    <input type="text" value={usernameLogin} placeholder="username" onChange={handleUsernameLoginChange}></input>
+                    <input type="password" placeholder="password" value={passwordLogin} onChange={handlePasswordLoginChange}></input>
+                    <button type="submit" onClick={handleLogin}>Login</button>
+                </form><br />
+                <form>
+                    <input type="text" value={usernameRegister} placeholder="username" onChange={handleUsernameRegisterChange}></input>
+                    <input type="password" placeholder="password" value={passwordRegister} onChange={handlePasswordRegisterChange}></input>
                     <button type="submit" onClick={handleRegister}>Register</button>
                 </form>
             </div>
@@ -96,7 +140,7 @@ const LoginHandler = () => {
     } else {
         return (
             <div>
-                <HackStrings users={user} logout={logout} />
+                <HackStrings user={user} logout={logout} />
             </div>
         )
     }
