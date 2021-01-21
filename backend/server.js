@@ -1,7 +1,8 @@
 const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
-
+const usersRouter = require('./controllers/userRouter')
+const globalStatsRouter = require('./controllers/globalStatsRouter')
 require('dotenv').config
 
 const app = express()
@@ -11,7 +12,7 @@ app.use(cors())
 app.use(express.json())
 
 const password = process.argv[2]
-  
+
 const uri =
     `mongodb+srv://admin:${password}@hackmancluster.1q2mw.mongodb.net/<dbname>?retryWrites=true&w=majority`
 
@@ -19,13 +20,13 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useFind
 )
 
 const connection = mongoose.connection
+
 connection.once('open', () => {
     console.log("Connected to MongoDB")
 })
 
-const usersRouter = require('./controllers/userRouter')
-
 app.use('/users', usersRouter)
+app.use('/stats', globalStatsRouter)
 
 app.listen(port, () => {
     console.log(`server is running on port: ${port}`)

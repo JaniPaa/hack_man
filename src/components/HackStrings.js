@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import EightLetterWords from '../listOfWords/EightLetterWords'
 import SevenLetterWords from '../listOfWords/SevenLetterWords'
 import SixLetterWords from '../listOfWords/SixLetterWords'
 import UserServices from '../services/UserServices'
+import GlobalStatsServices from '../services/GlobalStatsServices'
 import '../Styling/mainGame.css'
 
 const HackStrings = (props) => {
@@ -12,14 +13,45 @@ const HackStrings = (props) => {
     const [rightWord, setRightWord] = useState('')
     const [chosenWords, setChosenWords] = useState([])
     const [wordLengthInput, setWordLengthInput] = useState("6")
-    const [wordAmount, setWordAmount] = useState(4)
+    const [wordAmount, setWordAmount] = useState(6)
     const [play, setPlay] = useState(false)
     const [likeness, setLikeness] = useState(0)
     const [lives, setLives] = useState(3)
     const [message, setMessage] = useState('')
     const [loss, setLoss] = useState(false)
-
+    const [easyStats, setEasyStats] = useState({
+        gamesPlayed: 0,
+        wins: 0,
+        losses: 0
+    })
+    const [mediumStats, setMediumStats] = useState({
+        gamesPlayed: 0,
+        wins: 0,
+        losses: 0
+    })
+    const [hardStats, setHardStats] = useState({
+        gamesPlayed: 0,
+        wins: 0,
+        losses: 0
+    })
+    const [statsId, setStatsId] = useState()
+    let tempObject = {}
     const tempArray = []
+
+    useEffect(() => {
+        GlobalStatsServices
+            .getAll()
+            .catch(error => {
+                console.log(error)
+            })
+            .then(response => {
+                setEasyStats(response.data[0].easy)
+                setMediumStats(response.data[0].medium)
+                setHardStats(response.data[0].hard)
+                setStatsId(response.data[0].id)
+                console.log(response.data[0].id)
+            })
+    }, [])
 
     function onDifficultyChange(e) {
         setDifficulty(e.target.value)
@@ -52,6 +84,58 @@ const HackStrings = (props) => {
             console.log("Looping again because of: " + list[rand])
             getRandomWords(list)
         }
+    }
+
+    function updateGlobalStats(statsArray, difficulty) {
+        console.log(statsArray)
+        switch (difficulty) {
+            case "Easy":
+                GlobalStatsServices.update(statsId, tempObject = {
+                    easy: {
+                        gamesPlayed: statsArray.gamesPlayed,
+                        wins: statsArray.wins,
+                        losses: statsArray.losses
+                    }
+                })
+                    .catch(error => {
+                        console.log(error)
+                    }).then(response => {
+                        console.log(response.data)
+                    })
+                    console.log(tempObject)
+                break
+            case "Medium":
+                GlobalStatsServices.update(statsId, tempObject = {
+                    medium: {
+                        gamesPlayed: statsArray.gamesPlayed,
+                        wins: statsArray.wins,
+                        losses: statsArray.losses
+                    }
+                })
+                    .catch(error => {
+                        console.log(error)
+                    }).then(response => {
+                        console.log(response.data)
+                    })
+                    console.log(tempObject)
+                break
+            case "Hard":
+                GlobalStatsServices.update(statsId, tempObject = {
+                    hard: {
+                        gamesPlayed: statsArray.gamesPlayed,
+                        wins: statsArray.wins,
+                        losses: statsArray.losses
+                    }
+                })
+                    .catch(error => {
+                        console.log(error)
+                    }).then(response => {
+                        console.log(response.data)
+                    })
+                    console.log(tempObject)
+                break
+        }
+
     }
 
     const clicked = () => {
@@ -112,6 +196,33 @@ const HackStrings = (props) => {
         setLikeness(rightLetterAmount)
 
         if (rightLetterAmount === rightWordChars.length) {
+            switch (difficulty) {
+                case "Easy":
+                    setEasyStats({
+                        ...easyStats,
+                        gamesPlayed: easyStats.gamesPlayed + 1,
+                        wins: easyStats.wins + 1
+                    })
+                    updateGlobalStats(easyStats, "Easy")
+                    break
+                case "Medium":
+                    setMediumStats({
+                        ...mediumStats,
+                        gamesPlayed: mediumStats.gamesPlayed + 1,
+                        wins: mediumStats.wins + 1
+                    })
+                    updateGlobalStats(mediumStats, "Medium")
+                    break
+                case "Hard":
+                    setHardStats({
+                        ...hardStats,
+                        gamesPlayed: hardStats.gamesPlayed + 1,
+                        wins: hardStats.wins + 1
+                    })
+                    updateGlobalStats(hardStats, "Hard")
+                    break
+            }
+
             props.user[0].stats.gamesPlayed = props.user[0].stats.gamesPlayed + 1
             props.user[0].stats.wins = props.user[0].stats.wins + 1
             UserServices.update(props.user[0].username, props.user[0])
@@ -122,18 +233,45 @@ const HackStrings = (props) => {
                 })
             alert("You have hacked the system!")
             setPlay(false)
+            setLives(3)
         } else {
             setMessage("Wrong word!")
             setLives(lives - 1)
             if (lives === 1) {
+                switch (difficulty) {
+                    case "Easy":
+                        setEasyStats({
+                            ...easyStats,
+                            gamesPlayed: easyStats.gamesPlayed + 1,
+                            losses: easyStats.losses + 1
+                        })
+                        updateGlobalStats(easyStats, "Easy")
+                        break
+                    case "Medium":
+                        setMediumStats({
+                            ...mediumStats,
+                            gamesPlayed: mediumStats.gamesPlayed + 1,
+                            losses: mediumStats.losses + 1
+                        })
+                        updateGlobalStats(mediumStats, "Medium")
+                        break
+                    case "Hard":
+                        setHardStats({
+                            ...hardStats,
+                            gamesPlayed: hardStats.gamesPlayed + 1,
+                            losses: hardStats.losses + 1
+                        })
+                        updateGlobalStats(hardStats, "Hard")
+                        break
+                }
                 props.user[0].stats.gamesPlayed = props.user[0].stats.gamesPlayed + 1
                 props.user[0].stats.losses = props.user[0].stats.losses + 1
                 UserServices.update(props.user[0].username, props.user[0])
-                .catch(error => {
-                    console.log(error)
-                }).then(response => {
-                    console.log(response.data.username + "'s stats saved")
-                })
+                    .catch(error => {
+                        console.log(error)
+                    }).then(response => {
+                        console.log(response.data.username + "'s stats saved")
+                    })
                 setLives(3)
                 setLoss(true)
             }
@@ -228,6 +366,19 @@ const HackStrings = (props) => {
             <p>wins: {props.user[0].stats.wins}</p>
             <p>losses: {props.user[0].stats.losses}</p>
             {screen}
+            <h2>Global stats</h2>
+            <h3>Easy:</h3>
+            <p>Games played: {easyStats.gamesPlayed}</p>
+            <p>wins: {easyStats.wins}</p>
+            <p>losses: {easyStats.losses}</p>
+            <h3>Medium:</h3>
+            <p>Games played: {mediumStats.gamesPlayed}</p>
+            <p>wins: {mediumStats.wins}</p>
+            <p>losses: {mediumStats.losses}</p>
+            <h3>Hard:</h3>
+            <p>Games played: {hardStats.gamesPlayed}</p>
+            <p>wins: {hardStats.wins}</p>
+            <p>losses: {hardStats.losses}</p>
         </div>
     )
 
