@@ -13,8 +13,13 @@ const getOne = (username) => {
     return axios.get(basicUrl +""+ username)
 }
 
+const update = (username, newObject) => {
+    return axios.put(basicUrl + 'update/' + username, newObject)
+}
+
 export default {
     getAll,
     create,
-    getOne
+    getOne,
+    update
 }

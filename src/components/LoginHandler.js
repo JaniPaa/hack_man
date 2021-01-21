@@ -20,7 +20,7 @@ const LoginHandler = () => {
                 console.log(error)
             })
             .then(response => {
-                //Scuffed way to get get/check users data.
+                //Scuffed way to get get/check users data for login/registration, because retrieving passwords and usernames altogether.
                 setStoredUsers(response.data)
             })
     }, [storedUsers])
@@ -75,14 +75,21 @@ const LoginHandler = () => {
         else {
             const userObject = {
                 username: usernameRegister,
-                password: passwordRegister
+                password: passwordRegister,
+                stats: {
+                    gamesPlayed: 0,
+                    wins: 0,
+                    losses: 0
+                }
             }
-            setUser(user.concat(userObject))
-            setUsernameRegister('')
-            setPasswordRegister('')
             UserServices.create(userObject).then(response => {
                 console.log(response)
             })
+            setUser(user.concat(userObject))
+            setUsernameRegister('')
+            setPasswordRegister('')
+            console.log(userObject)
+            
             setIsLoggedIn(true)
         }
     }
@@ -109,7 +116,9 @@ const LoginHandler = () => {
             } else {
                 console.log(loginObject)
                 console.log("login success")
-                setUser(user.concat(loginObject))
+                setUser(user.concat(storedUsers.find(user => {
+                    return user.username === usernameLogin
+                })))
                 setUsernameLogin('')
                 setPasswordLogin('')
                 setIsLoggedIn(true)

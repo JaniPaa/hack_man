@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import EightLetterWords from '../listOfWords/EightLetterWords'
 import SevenLetterWords from '../listOfWords/SevenLetterWords'
 import SixLetterWords from '../listOfWords/SixLetterWords'
+import UserServices from '../services/UserServices'
 import '../Styling/mainGame.css'
 
 const HackStrings = (props) => {
@@ -16,6 +17,7 @@ const HackStrings = (props) => {
     const [likeness, setLikeness] = useState(0)
     const [lives, setLives] = useState(3)
     const [message, setMessage] = useState('')
+    const [loss, setLoss] = useState(false)
 
     const tempArray = []
 
@@ -47,7 +49,7 @@ const HackStrings = (props) => {
             tempArray.push(list[rand])
         } else {
             console.log(tempArray)
-            console.log("Looping again because of: "+list[rand])
+            console.log("Looping again because of: " + list[rand])
             getRandomWords(list)
         }
     }
@@ -110,11 +112,31 @@ const HackStrings = (props) => {
         setLikeness(rightLetterAmount)
 
         if (rightLetterAmount === rightWordChars.length) {
+            props.user[0].stats.gamesPlayed = props.user[0].stats.gamesPlayed + 1
+            props.user[0].stats.wins = props.user[0].stats.wins + 1
+            UserServices.update(props.user[0].username, props.user[0])
+                .catch(error => {
+                    console.log(error)
+                }).then(response => {
+                    console.log(response.data.username + "'s stats saved")
+                })
             alert("You have hacked the system!")
             setPlay(false)
         } else {
             setMessage("Wrong word!")
             setLives(lives - 1)
+            if (lives === 1) {
+                props.user[0].stats.gamesPlayed = props.user[0].stats.gamesPlayed + 1
+                props.user[0].stats.losses = props.user[0].stats.losses + 1
+                UserServices.update(props.user[0].username, props.user[0])
+                .catch(error => {
+                    console.log(error)
+                }).then(response => {
+                    console.log(response.data.username + "'s stats saved")
+                })
+                setLives(3)
+                setLoss(true)
+            }
         }
         rightLetterAmount = 0
     }
@@ -186,12 +208,13 @@ const HackStrings = (props) => {
                 <p>Likeness: {likeness}</p>
                 <p>{message}</p>
             </div>
-    } if (lives === 0) {
+    } if (loss) {
         screen =
             <div>
                 <p>The system has been permanently locked.</p>
                 <button onClick={e => {
                     setPlay(false)
+                    setLoss(false)
                     setLives(3)
                 }}>Play again?</button>
             </div>
@@ -199,8 +222,11 @@ const HackStrings = (props) => {
 
     return (
         <div>
-            <h3>Account: {props.user[0].username}</h3>
             <button onClick={props.logout}>Logout</button>
+            <h3>Account: {props.user[0].username}</h3>
+            <p>games played: {props.user[0].stats.gamesPlayed}</p>
+            <p>wins: {props.user[0].stats.wins}</p>
+            <p>losses: {props.user[0].stats.losses}</p>
             {screen}
         </div>
     )
