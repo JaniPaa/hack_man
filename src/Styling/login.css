@@ -1,0 +1,138 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.login-container {
+    opacity: 90%;
+    height: 100vh;
+    width: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form {
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    padding: 80px 40px 40px;
+    background: black;
+    border-radius: 10px;
+    color: #fff;
+    box-shadow: 0 15px 26px rgba(0,0,0,5);
+}
+
+.form h2 {
+    text-align: center;
+    color: green;
+    margin-bottom: 2rem;
+    letter-spacing: 2px;
+}
+
+.form::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 62%;
+    height: 100%;
+    background: rgba(43, 122, 27, 0.08);
+    border-radius: 10px;
+    pointer-events: none;
+}
+
+.form .input-container input {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    margin-bottom: 30px;
+    border: none;
+    border-bottom: 1px solid green;
+    outline: none;
+    background-color: transparent;
+    color: inherit;
+}
+
+.form .input-container label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px 0;
+    font-size: 1rem;
+    pointer-events: none;
+    transition: .3s ease-out;
+}
+
+#register {
+    display: none;
+}
+
+#login-btn {
+    display: block;
+    margin-left: auto;
+    border: none;
+    outline: none;
+    background: green;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 10px 13px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#register-btn {
+    display: block;
+    margin-left: auto;
+    border: none;
+    outline: none;
+    background: green;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 10px 13px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#login-btn:hover, #register-btn:hover {
+    background: red;
+    transition: .5s ease-in-out;
+}
+
+.register-link {
+    color: green;
+}
+
+#register {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 0;
+    z-index: 1;
+    background: rgb(32, 4, 4);
+    opacity: 0;
+    transition: 0.6s;
+}
+
+#register:target {
+    height: 100%;
+    opacity: 1;
+}
+
+.close-register {
+    position: absolute;
+    right: 1.5rem;
+    top: 0.5rem;
+    font-size: 2rem;
+    font-weight: 900;
+    text-decoration: none;
+    color: red;
+}

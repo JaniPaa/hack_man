@@ -359,7 +359,7 @@ const HackStrings = (props) => {
     }
 
     return (
-        <div>
+        <div className="game-screen">
             <button onClick={props.logout}>Logout</button>
             <h3>Account: {props.user[0].username}</h3>
             <p>games played: {props.user[0].stats.gamesPlayed}</p>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import HackStrings from './HackStrings'
 import UserServices from '../services/UserServices'
+import '../Styling/login.css'
 
 const LoginHandler = () => {
 
@@ -133,17 +134,28 @@ const LoginHandler = () => {
 
     if (isLoggedIn === false) {
         return (
-            <div>
-                <form>
-                    <input type="text" value={usernameLogin} placeholder="username" onChange={handleUsernameLoginChange}></input>
-                    <input type="password" placeholder="password" value={passwordLogin} onChange={handlePasswordLoginChange}></input>
-                    <button type="submit" onClick={handleLogin}>Login</button>
+            <div className="login-container">
+                <form className="form">
+                    <h2>Login</h2>
+                    <div className="input-container">
+                        <input type="text" value={usernameLogin} placeholder="username" onChange={handleUsernameLoginChange}></input>
+                        <input type="password" placeholder="password" value={passwordLogin} onChange={handlePasswordLoginChange}></input>
+                    </div>
+                    <button type="submit" onClick={handleLogin} id="login-btn">Login</button>
+                    <a href="#register" className="register-link">Register</a>
                 </form><br />
-                <form>
-                    <input type="text" value={usernameRegister} placeholder="username" onChange={handleUsernameRegisterChange}></input>
-                    <input type="password" placeholder="password" value={passwordRegister} onChange={handlePasswordRegisterChange}></input>
-                    <button type="submit" onClick={handleRegister}>Register</button>
-                </form>
+                
+                <div id="register">
+                    <form className="form">
+                        <a href="#" className="close-register">&times;</a>
+                        <h2>Register</h2>
+                        <div className="input-container">
+                            <input type="text" value={usernameRegister} placeholder="username" onChange={handleUsernameRegisterChange}></input>
+                            <input type="password" placeholder="password" value={passwordRegister} onChange={handlePasswordRegisterChange}></input>
+                        </div>
+                        <button type="submit" onClick={handleRegister} id="register-btn">Register</button>
+                    </form>
+                </div>
             </div>
         )
     } else {
