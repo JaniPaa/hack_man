@@ -1,0 +1,31 @@
+.stats-container {
+}
+
+.account-stats {
+    color: white;
+    position: absolute;
+    top: 8px;
+    right: 13px;
+    font-size: 18px;
+}
+
+.global-stats {
+    position: absolute;
+    bottom: 8px;
+    right: 16px;
+    font-size: 18px;
+}
+.global-stats h2 {
+    color: white;
+}
+.easy-stats {
+    color: green;
+}
+
+.medium-stats {
+    color: yellow;
+}
+
+.hard-stats {
+    color: red;
+}

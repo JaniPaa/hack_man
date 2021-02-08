@@ -5,6 +5,7 @@ import SixLetterWords from '../listOfWords/SixLetterWords'
 import UserServices from '../services/UserServices'
 import GlobalStatsServices from '../services/GlobalStatsServices'
 import '../Styling/mainGame.css'
+import Stats from './Stats'
 
 const HackStrings = (props) => {
 
@@ -52,6 +53,12 @@ const HackStrings = (props) => {
                 console.log(response.data[0].id)
             })
     }, [])
+
+    function logout() {
+        if(window.confirm("Are you sure you want to logout?")){
+            props.logout()
+        }
+    }
 
     function onDifficultyChange(e) {
         setDifficulty(e.target.value)
@@ -102,7 +109,7 @@ const HackStrings = (props) => {
                     }).then(response => {
                         console.log(response.data)
                     })
-                    console.log(tempObject)
+                console.log(tempObject)
                 break
             case "Medium":
                 GlobalStatsServices.update(statsId, tempObject = {
@@ -117,7 +124,7 @@ const HackStrings = (props) => {
                     }).then(response => {
                         console.log(response.data)
                     })
-                    console.log(tempObject)
+                console.log(tempObject)
                 break
             case "Hard":
                 GlobalStatsServices.update(statsId, tempObject = {
@@ -132,7 +139,7 @@ const HackStrings = (props) => {
                     }).then(response => {
                         console.log(response.data)
                     })
-                    console.log(tempObject)
+                console.log(tempObject)
                 break
         }
 
@@ -307,14 +314,14 @@ const HackStrings = (props) => {
                 <button onClick={e => {
                     setDifficulty("Easy")
                 }}>Back</button>
-                <button onClick={clicked}>Play</button>
+                {/* <button onClick={clicked}>Play</button> */}
             </div>
 
     } if (!play && difficulty !== "Custom") {
         screen =
-            <div>
+            <div className="difficulty-selection">
                 <label>
-                    Select difficulty:
+                    SELECT DIFFICULTY:
                 <select value={difficulty} onChange={onDifficultyChange}>
                         <option value="Easy">Easy</option>
                         <option value="Medium">Medium</option>
@@ -322,16 +329,16 @@ const HackStrings = (props) => {
                         <option value="Custom">Custom</option>
                     </select>
                 </label><br />
-                <button onClick={clicked}>Play</button>
+                <button onClick={clicked} id="play-button">Play &#9760;</button>
 
             </div>
     }
 
     if (play) {
         screen =
-            <div>
+            <div className="main-game">
                 <p>
-                    You have chosen: <br />
+                    You have chosen {difficulty} difficulty. <br />
                     Word length: {wordLengthInput} <br />
                     Word amount: {wordAmount}
                 </p>
@@ -348,7 +355,7 @@ const HackStrings = (props) => {
             </div>
     } if (loss) {
         screen =
-            <div>
+            <div className="loss-screen">
                 <p>The system has been permanently locked.</p>
                 <button onClick={e => {
                     setPlay(false)
@@ -359,26 +366,10 @@ const HackStrings = (props) => {
     }
 
     return (
-        <div className="game-screen">
-            <button onClick={props.logout}>Logout</button>
-            <h3>Account: {props.user[0].username}</h3>
-            <p>games played: {props.user[0].stats.gamesPlayed}</p>
-            <p>wins: {props.user[0].stats.wins}</p>
-            <p>losses: {props.user[0].stats.losses}</p>
-            {screen}
-            <h2>Global stats</h2>
-            <h3>Easy:</h3>
-            <p>Games played: {easyStats.gamesPlayed}</p>
-            <p>wins: {easyStats.wins}</p>
-            <p>losses: {easyStats.losses}</p>
-            <h3>Medium:</h3>
-            <p>Games played: {mediumStats.gamesPlayed}</p>
-            <p>wins: {mediumStats.wins}</p>
-            <p>losses: {mediumStats.losses}</p>
-            <h3>Hard:</h3>
-            <p>Games played: {hardStats.gamesPlayed}</p>
-            <p>wins: {hardStats.wins}</p>
-            <p>losses: {hardStats.losses}</p>
+        <div id="wrapper">
+            <button onClick={logout} id="logout-button">&#9932;</button>
+            {screen} 
+            <Stats easyStats={easyStats} mediumStats={mediumStats} hardStats={hardStats} userStats={props.user[0].stats} username={props.user[0].username} />    
         </div>
     )
 

@@ -1,21 +1,93 @@
+body {
+    font: 1.3rem Inconsolata, monospace;
+    text-shadow: 0 0 5px #746e6e;
+}
+
 .game-screen{
     background-color:rgb(255, 255, 255);
 }
+button {
+    border: none;
+    outline: none;
+    background: green;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 10px 13px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: red;
+    transition: .5s ease-in-out;
+}
+
 .randomedWordList{
-    background-color:rgb(35, 131, 6);
-    padding-top: 5px;
-    padding-bottom: 5px;
+    background-color: black;
+    background-image: radial-gradient(
+        rgba(0, 150, 0, 0.75), black 120%
+    );
+    padding-top: 15px;
+    padding-bottom: 15px;
     border-radius: 10%;
     border-style: outset;
     border-width: 7px;
     border-color: rgb(194, 185, 185);
-    width: 100px;
+    width: 160px;
     letter-spacing: 20;
+    color: black;
+    text-transform: uppercase;
+    text-align: center;
 }
 
 .wordItem:hover{
     background-color: black;
     color: white;
-    width: 70%;
+    text-align: center;
     padding-left: 2px;
+}
+
+ul {
+    list-style-type: none;
+    width: 70%;
+    margin: auto;
+}
+
+#wrapper {
+    color: red;
+    background-color: rgba(4, 7, 0, 0.8);
+    margin: auto;
+    width: 70%;
+    padding: 15px;
+    height: 600px;
+    position: relative;
+}
+
+.difficulty-selection {
+    position: absolute;
+    top: 10%;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+}
+
+.main-game {
+    position: absolute;
+    top: 10%;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+}
+
+.loss-screen {
+    position: absolute;
+    top: 10%;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+}
+
+#play-button {
+    margin-top: 10px;
 }

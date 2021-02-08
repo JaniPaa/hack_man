@@ -8,11 +8,13 @@ const App = () => {
 
   return (
     <div>
+      <div className="title-container">
+        <h1 id="game-title">The Hack Man Game!</h1>
+      </div>
       <video id="background-video" loop autoPlay muted>
         <source src={hackManVideo} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
-      <p>Hi, welcome to play The Hack_Man!</p>
       <LoginHandler />
     </div>
   )
