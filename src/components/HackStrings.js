@@ -360,6 +360,7 @@ const HackStrings = (props) => {
                 <button onClick={e => {
                     setPlay(false)
                     setLoss(false)
+                    
                     setLives(3)
                 }}>Play again?</button>
             </div>
