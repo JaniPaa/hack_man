@@ -91,3 +91,19 @@ ul {
 #play-button {
     margin-top: 10px;
 }
+
+#lives {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 60px;
+    color: green;
+}
+
+#custom-play-button {
+    margin-left: 3px;
+}
+
+#custom-play-button, #custom-back-button {
+    margin-top: 3px;
+}

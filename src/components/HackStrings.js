@@ -7,6 +7,7 @@ import GlobalStatsServices from '../services/GlobalStatsServices'
 import '../Styling/mainGame.css'
 import Stats from './Stats'
 
+
 const HackStrings = (props) => {
 
     const [difficulty, setDifficulty] = useState('Easy')
@@ -20,6 +21,19 @@ const HackStrings = (props) => {
     const [lives, setLives] = useState(3)
     const [message, setMessage] = useState('')
     const [loss, setLoss] = useState(false)
+    // const [lastPickedWords, setLastPickedWords] = useState({
+    //     word: "",
+    //     likeness: 0
+    // })
+    const [lifePoint1, setLifePoint1] = useState({
+        color: "green"
+    })
+    const [lifePoint2, setLifePoint2] = useState({
+        color: "green"
+    })
+    const [lifePoint3, setLifePoint3] = useState({
+        color: "green"
+    })
     const [easyStats, setEasyStats] = useState({
         gamesPlayed: 0,
         wins: 0,
@@ -37,8 +51,8 @@ const HackStrings = (props) => {
     })
     const [statsId, setStatsId] = useState()
     let tempObject = {}
-    const tempArray = []
 
+    const tempArray = []
     useEffect(() => {
         GlobalStatsServices
             .getAll()
@@ -55,7 +69,7 @@ const HackStrings = (props) => {
     }, [])
 
     function logout() {
-        if(window.confirm("Are you sure you want to logout?")){
+        if (window.confirm("Are you sure you want to logout?")) {
             props.logout()
         }
     }
@@ -141,6 +155,10 @@ const HackStrings = (props) => {
                     })
                 console.log(tempObject)
                 break
+            case "Custom":
+                break
+            default:
+                return null
         }
 
     }
@@ -228,6 +246,10 @@ const HackStrings = (props) => {
                     })
                     updateGlobalStats(hardStats, "Hard")
                     break
+                case "Custom":
+                    break
+                default:
+                    return null
             }
 
             props.user[0].stats.gamesPlayed = props.user[0].stats.gamesPlayed + 1
@@ -241,9 +263,38 @@ const HackStrings = (props) => {
             alert("You have hacked the system!")
             setPlay(false)
             setLives(3)
+            setLikeness(0)
+            setLifePoint1({
+                color: "green"
+            })
+            setLifePoint2({
+                color: "green"
+            })
+            setLifePoint3({
+                color: "green"
+            })
         } else {
             setMessage("Wrong word!")
             setLives(lives - 1)
+            switch (lives) {
+                case 3:
+                    setLifePoint1({
+                        color: "red"
+                    })
+                    break
+                case 2:
+                    setLifePoint2({
+                        color: "red"
+                    })
+                    break
+                case 1:
+                    setLifePoint3({
+                        color: "red"
+                    })
+                    break
+                default:
+                    return null
+            }
             if (lives === 1) {
                 switch (difficulty) {
                     case "Easy":
@@ -270,6 +321,10 @@ const HackStrings = (props) => {
                         })
                         updateGlobalStats(hardStats, "Hard")
                         break
+                    case "Custom":
+                        break
+                    default:
+                        return null
                 }
                 props.user[0].stats.gamesPlayed = props.user[0].stats.gamesPlayed + 1
                 props.user[0].stats.losses = props.user[0].stats.losses + 1
@@ -281,6 +336,8 @@ const HackStrings = (props) => {
                     })
                 setLives(3)
                 setLoss(true)
+                setLikeness(0)
+                setMessage("")
             }
         }
         rightLetterAmount = 0
@@ -290,7 +347,8 @@ const HackStrings = (props) => {
     let screen
     if (!play && difficulty === "Custom") {
         screen =
-            <div>
+            <div className="difficulty-selection">
+                <h3>Custom mode</h3>
                 <label>
                     Select word length:
                     <select value={wordLengthInput} onChange={onWordLengthChange}>
@@ -313,8 +371,8 @@ const HackStrings = (props) => {
                 </label><br />
                 <button onClick={e => {
                     setDifficulty("Easy")
-                }}>Back</button>
-                {/* <button onClick={clicked}>Play</button> */}
+                }} id="custom-back-button">Back</button>
+                <button onClick={clicked} id="custom-play-button">Play</button>
             </div>
 
     } if (!play && difficulty !== "Custom") {
@@ -349,19 +407,38 @@ const HackStrings = (props) => {
                     )}
                 </ul>
                 <p>Last picked word: {pickedWord}</p>
-                <p>Lives: {lives}</p>
                 <p>Likeness: {likeness}</p>
+                <p>Life points</p>
+                <div id="lives">
+                    <p style={lifePoint1}>&#9760;</p>
+                    <p style={lifePoint2}>&#9760;</p>
+                    <p style={lifePoint3}>&#9760;</p>
+                </div>
                 <p>{message}</p>
             </div>
     } if (loss) {
         screen =
             <div className="loss-screen">
                 <p>The system has been permanently locked.</p>
+                <div id="lives">
+                    <p style={lifePoint1}>&#9760;</p>
+                    <p style={lifePoint2}>&#9760;</p>
+                    <p style={lifePoint3}>&#9760;</p>
+                </div>
                 <button onClick={e => {
                     setPlay(false)
                     setLoss(false)
-                    
                     setLives(3)
+                    setLifePoint1({
+                        color: "green"
+                    })
+                    setLifePoint2({
+                        color: "green"
+                    })
+                    setLifePoint3({
+                        color: "green"
+                    })
+                    setMessage("")
                 }}>Play again?</button>
             </div>
     }
@@ -369,8 +446,8 @@ const HackStrings = (props) => {
     return (
         <div id="wrapper">
             <button onClick={logout} id="logout-button">&#9932;</button>
-            {screen} 
-            <Stats easyStats={easyStats} mediumStats={mediumStats} hardStats={hardStats} userStats={props.user[0].stats} username={props.user[0].username} />    
+            {screen}
+            <Stats easyStats={easyStats} mediumStats={mediumStats} hardStats={hardStats} userStats={props.user[0].stats} username={props.user[0].username} />
         </div>
     )
 
